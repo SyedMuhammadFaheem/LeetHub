@@ -49,8 +49,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
         saveCredentials(username, repo, token);
         console.log(username, repo, token);
+        chrome.tabs.executeScript(tabs[0].id, { file: "content.js" });
       });
-    chrome.tabs.executeScript(tabs[0].id, { file: "content.js" });
   } 
 
   

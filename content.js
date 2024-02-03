@@ -7,7 +7,7 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
     .textContent.split(" ")
     .join("");
   let extensionName = document.getElementById("result_language").innerHTML;
-  
+
   if (extensionName === "python3") extensionName = ".py";
   else if (extensionName === "python") extensionName = ".py";
   else if (extensionName === "java") extensionName = ".java";
@@ -32,16 +32,15 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
   let newContent = "";
   for (let i = 0; i < leetCodeSolutionTextarea.length; i++) {
     const element = leetCodeSolutionTextarea[i];
-    newContent = newContent+element.textContent;
+    newContent = "\n" + newContent + element.textContent;
   }
-
-  console.log(newContent);
 
   if (!newContent) {
     console.error("Failed to extract content from LeetCode solution textarea");
     return;
   }
 
+  console.log(newContent);
 
   const fileData = {
     message: COMMIT_MESSAGE,
@@ -50,24 +49,52 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
 
   const credentials = btoa(`${username}:${token}`);
 
-  
-  fetch(
-    `https://api.github.com/repos/${username}/${repo}/contents/${fileName}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(fileData),
-    }
-  )
-    .then((response) => response.json())
+  const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${fileName}`;
+
+  fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            Authorization: `Basic ${credentials}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fileData),
+        }).then((response) => {
+          if (response.ok) console.log("File Created!");
+          else throw new error("Error in creating file!");
+        });
+      }
+    })
+    .then((data) => {
+      const sha = data ? data.sha : '';
+      if (sha) {
+        return fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            Authorization: `Basic ${credentials}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...fileData,
+            sha: sha,
+          }),
+        });
+      }
+    })
+    .then((response) => response ? response.json() : 'No SHA found')
     .then((data) => {
       console.log(data);
     })
     .catch((error) => {
       console.error("Error:", error);
-      
     });
 });
