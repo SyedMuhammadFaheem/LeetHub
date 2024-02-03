@@ -1,13 +1,11 @@
 {
     "manifest_version": 2,
-    "name": "LeetCode GitHub Commit",
-    "version": "1.0",
+    "name": "LeetHub",
+    "version": "0.0.1.6",
     "description": "Commit LeetCode solutions to GitHub",
     "browser_action": {
       "default_icon": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
+        "128": "icons/leetcode.png"
       },
       "default_popup": "popup.html"
     },
@@ -16,17 +14,11 @@
       "storage"
     ],
     "icons": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    },
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
+      "128": "icons/leetcode.png"
     },
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
+        "matches": ["https://*.leetcode.com/submissions"],
         "js": ["content.js"]
       }
     ]
