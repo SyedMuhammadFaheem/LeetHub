@@ -14,3 +14,5 @@ resources/sass/.sass-cache/
 resources/.arch-internal-preview.css
 .arch-internal-preview.css
 token.txt
+apis/
+test.py

@@ -69,7 +69,7 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
           },
           body: JSON.stringify(fileData),
         }).then((response) => {
-          if (response.ok) console.log("File Created!");
+          if (response.ok) window.alert("File Created!");
           else throw new error("Error in creating file!");
         });
       }
@@ -92,7 +92,8 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
     })
     .then((response) => response ? response.json() : 'No SHA found')
     .then((data) => {
-      console.log(data);
+        if(data!="No SHA found")
+        window.alert("File Updated!")
     })
     .catch((error) => {
       console.error("Error:", error);
