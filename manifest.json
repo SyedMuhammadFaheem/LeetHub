@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "LeetHub",
-    "version": "0.0.1.6",
+    "version": "0.0.2.6",
     "description": "Commit LeetCode solutions to GitHub",
     "browser_action": {
       "default_icon": {

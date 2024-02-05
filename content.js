@@ -23,9 +23,9 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
     questionName + extensionName ||
     "solution.txt" + Math.floor(Math.random() * 100);
 
-  console.log(username, repo, token, fileName);
+  
   const COMMIT_MESSAGE = fileName + " " + String(new Date());
-  console.log(COMMIT_MESSAGE);
+  
 
   const leetCodeSolutionTextarea =
     document.getElementsByClassName("ace_content");
@@ -42,13 +42,11 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
       }
     }
   }
-console.log(newContent)
   if (!newContent) {
     console.error("Failed to extract content from LeetCode solution textarea");
     return;
   }
 
-  console.log(newContent);
 
   const fileData = {
     message: COMMIT_MESSAGE,
