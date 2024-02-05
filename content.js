@@ -32,9 +32,17 @@ chrome.storage.local.get(["username", "repo", "token"], function (result) {
   let newContent = "";
   for (let i = 0; i < leetCodeSolutionTextarea.length; i++) {
     const element = leetCodeSolutionTextarea[i];
-    newContent = "\n" + newContent + element.textContent;
+    newContent += element.textContent;
   }
-
+  for(let i=1;i<newContent.length;i++){
+    if(newContent[i-1] != ' ' && i+1 < newContent.length && newContent[i]==' ' && newContent[i+1]==' '){
+      newContent = newContent.slice(0,i) + '\n' +  newContent.slice(i+1,newContent.length);
+      while(i+1<newContent.length && newContent[i+1]==' '){
+        i++;
+      }
+    }
+  }
+console.log(newContent)
   if (!newContent) {
     console.error("Failed to extract content from LeetCode solution textarea");
     return;
