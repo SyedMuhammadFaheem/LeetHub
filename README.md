@@ -83,6 +83,7 @@ Once the token is generated, GitHub will display it. Copy the token and save it 
 5. Click on COMMIT TO GITHUB button.
 
 ## Voilà!
+![Voilà Image](https://github.com/SyedMuhammadFaheem/LeetHub/blob/fea5afe88b5376a2faca9791270061d1b5261fd2/icons/Screenshot%202024-02-05%20at%206.17.35%E2%80%AFPM.png)
 
 Your solution would get committed now successfully.
 
