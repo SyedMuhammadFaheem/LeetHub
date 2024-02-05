@@ -3,7 +3,7 @@ A chrome extension which automatically commits your leetcode solution to a prede
 
 # V 0.0.2.6
 
-# Special Mentions: [Wahaj Javed Alam](https://github.com/WahajJaved20)
+### Special Mentions: [Wahaj Javed Alam](https://github.com/WahajJaved20)
 
 
 # Installation Steps
@@ -14,13 +14,13 @@ A chrome extension which automatically commits your leetcode solution to a prede
 2. **Extract it into any directory in your PC**
    - After downloading, extract the contents of the ZIP file into any directory of your choice on your computer.
 
-3. **Open your browser (Chrome or Opera GX)**
+3. **Open your browser (Chrome or Opera GX or Brave)**
    - Ensure you have either Google Chrome or Opera GX installed. This extension is designed to work on browsers supporting the Chrome Web Store.
 
 4. **Go to Extensions**
    - Open your browser and navigate to the Extensions page.
      - In Chrome: Click on the three dots in the top-right corner, go to "More tools," and then select "Extensions."
-     - In Opera GX: Click on the browser menu, go to "Extensions," and then select "Manage Extensions."
+     - In Opera GX or Brave: Click on the browser menu, go to "Extensions," and then select "Manage Extensions."
 
 5. **Enable Developer Mode in the Top bar**
    - Once on the Extensions page, look for a checkbox or toggle named "Developer mode" in the top-right corner.
