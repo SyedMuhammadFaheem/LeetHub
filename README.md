@@ -57,7 +57,7 @@ A chrome extension which automatically commits your leetcode solution to a prede
 ## Configure Token Settings:
 
 1. Provide a name for your token in the "Token name" field.
-2. Select the desired scopes or permissions for your token. Choose only the permissions necessary (repo and admin) for your specific use case to enhance security.
+2. Select the repo you want to push in. Choose only the permissions necessary (admin, commit statuses, contents).
 
 ## Generate Token:
 
