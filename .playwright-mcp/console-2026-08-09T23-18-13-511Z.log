@@ -1,0 +1,4 @@
+[      69ms] TypeError: Cannot read properties of undefined (reading 'onMessage')
+    at http://localhost:8917/options.js:62:16
+[   27567ms] TypeError: Cannot read properties of undefined (reading 'onMessage')
+    at http://localhost:8917/options.js:62:16

@@ -1,0 +1,3 @@
+[     105ms] TypeError: Cannot read properties of undefined (reading 'query')
+    at http://localhost:8917/popup.js:11:13
+[     155ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8917/favicon.ico:0

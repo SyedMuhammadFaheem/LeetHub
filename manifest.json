@@ -1,26 +1,42 @@
 {
-    "manifest_version": 2,
-    "name": "LeetHub",
-    "version": "0.0.2.6",
-    "description": "Commit LeetCode solutions to GitHub",
-    "browser_action": {
-      "default_icon": {
-        "128": "icons/leetcode.png"
-      },
-      "default_popup": "popup.html"
-    },
-    "permissions": [
-      "activeTab",
-      "storage"
-    ],
-    "icons": {
+  "manifest_version": 3,
+  "name": "LeetHub",
+  "version": "0.1.0",
+  "description": "Automatically commit accepted LeetCode solutions to GitHub",
+  "action": {
+    "default_icon": {
       "128": "icons/leetcode.png"
     },
-    "content_scripts": [
-      {
-        "matches": ["https://*.leetcode.com/submissions"],
-        "js": ["content.js"]
-      }
-    ]
-  }
-  
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "128": "icons/leetcode.png"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://leetcode.com/*",
+    "https://github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": [
+        "lib/extract.js",
+        "lib/github.js",
+        "lib/graphql.js",
+        "lib/readme.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

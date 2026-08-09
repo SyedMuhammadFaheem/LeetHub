@@ -1,89 +1,77 @@
 # LeetHub
-A chrome extension which automatically commits your leetcode solution to a predefined repository you connected earlier.
 
-# V 0.0.2.6
+A Chrome extension (Manifest V3) that automatically commits your accepted LeetCode solutions to a GitHub repository — no manual copy-paste, no clicking through a popup.
 
-### Special Mentions: [Wahaj Javed Alam](https://github.com/WahajJaved20)
+## What it does
 
+- Watches the problem page while you work. When a submission comes back **Accepted**, it commits automatically.
+- Pulls the solution code, language, difficulty, and tags from LeetCode's own submission data.
+- Writes each solution to `<problem-slug>/solution.<ext>` plus a `<problem-slug>/README.md` with problem notes, and keeps a progress table in your repo's root `README.md` up to date.
+- Skips committing if you resubmit an identical accepted solution.
 
-# Installation Steps
-1. **Download the Zip File from the Github Page**
-   - Visit the [Github Page](https://github.com/SyedMuhammadFaheem/LeetHub).
-   - Download the Zip File by clicking on the "Code" button and selecting "Download ZIP."
+## Installation (unpacked, no build step)
 
-2. **Extract it into any directory in your PC**
-   - After downloading, extract the contents of the ZIP file into any directory of your choice on your computer.
+1. Download or clone this repository.
+2. Open `chrome://extensions` (also works in Brave, Opera GX, Edge — any Chromium browser).
+3. Enable **Developer mode** (top-right toggle).
+4. Click **Load unpacked** and select the folder you downloaded.
+5. The LeetHub icon should appear in your extensions toolbar.
 
-3. **Open your browser (Chrome or Opera GX or Brave)**
-   - Ensure you have either Google Chrome or Opera GX installed. This extension is designed to work on browsers supporting the Chrome Web Store.
+## Connecting GitHub
 
-4. **Go to Extensions**
-   - Open your browser and navigate to the Extensions page.
-     - In Chrome: Click on the three dots in the top-right corner, go to "More tools," and then select "Extensions."
-     - In Opera GX or Brave: Click on the browser menu, go to "Extensions," and then select "Manage Extensions."
+Click the LeetHub icon → **Open Settings**. You have two ways to connect:
 
-5. **Enable Developer Mode in the Top bar**
-   - Once on the Extensions page, look for a checkbox or toggle named "Developer mode" in the top-right corner.
-   - Enable Developer Mode.
+### Option A — Sign in with GitHub (recommended)
 
-6. **Load the Extension**
-   - Look for an option to "Load unpacked" or "Load extension" on the Extensions page.
-   - Click on it and select the directory where you extracted the contents of the ZIP file.
+This uses GitHub's OAuth Device Flow: no password or token to copy, and the extension never sees your GitHub password.
 
-7. **Verify Installation**
-   - The extension should now be visible in your list of installed extensions.
-   - Ensure it is enabled and working as expected.
+If you're setting this extension up for yourself from source, you need to register a free OAuth App once:
 
+1. Go to [github.com/settings/developers](https://github.com/settings/developers) → **New OAuth App**.
+2. Fill in any Homepage URL and Authorization callback URL (e.g. your fork's repo URL — device flow doesn't use the callback, but GitHub requires the field).
+3. After creating the app, open its settings and check **"Enable Device Flow."**
+4. Copy the **Client ID** (not the secret — device flow never needs a secret).
+5. Paste it into `lib/config.js` as `GITHUB_CLIENT_ID`.
 
-# Generate Github Personal Access Token
-## Log in to your GitHub Account:
+Then in the extension's Settings page, click **Connect with GitHub**, enter the code shown at the GitHub page that opens, and you're connected.
 
-1. Open your web browser and go to [GitHub](https://github.com/).
-2. Log in to your GitHub account if you are not already logged in.
+### Option B — Personal Access Token
 
-## Access Personal Access Tokens Settings:
+1. On GitHub, go to **Settings → Developer settings → Personal access tokens (Fine-grained)**.
+2. Generate a token scoped to the one repository you want LeetHub to commit to, with **Contents: Read and write** permission only.
+3. Paste it into the Settings page's token field and save.
 
-1. In the top-right corner of the GitHub page, click on your profile picture, and then click on "Settings."
+Either way, also set your **GitHub Owner** (your username or an org) and **Repository Name** in Settings — this is where solutions get committed.
 
-## Go to Developer Settings:
+## Using it
 
-1. In the left sidebar, scroll down and click on "Developer settings."
+Just solve problems on LeetCode normally. When a submission is Accepted, LeetHub commits it in the background and shows a small toast confirming the commit. Open the popup any time to see connection status or trigger a manual commit if auto-detection ever misses a result.
 
-## Generate a Token:
+## Repository layout it creates
 
-1. In the Developer settings menu, click on "Personal access tokens. (Fine Grained Tokens)"
-2. Click the "Generate token" button.
+```
+your-repo/
+  README.md              # auto-updated progress table
+  two-sum/
+    solution.py
+    README.md             # problem title, difficulty, tags, runtime/memory
+  add-two-numbers/
+    solution.js
+    README.md
+```
 
-## Configure Token Settings:
+## Development
 
-1. Provide a name for your token in the "Token name" field.
-2. Select the repo you want to push in. Choose only the permissions necessary (admin, commit statuses, contents).
+No build step — plain JS/HTML/CSS, loaded directly by the browser.
 
-## Generate Token:
+- Run tests: `node --test`
+- Syntax-check: `find . -name "*.js" -not -path "./node_modules/*" -print0 | xargs -0 -n1 node --check`
+- CI runs both on every push via `.github/workflows/ci.yml`.
 
-1. Scroll down and click the "Generate token" button at the bottom of the page.
+## Version
 
-## Copy and Save the Token:
+0.1.0 — Manifest V3 rewrite.
 
-Once the token is generated, GitHub will display it. Copy the token and save it in a secure location immediately.
+### Special Mentions
 
-
-# How and where to use the extension?
-## After you submitted the solution, go to your specific accepted submission
-
-1. The URL would look like this below:
-   - `https://leetcode.com/submissions/detail/1163743480/`
-
-## Enter your GitHub Username, Repository Name, and GitHub Access Token extracted earlier in the extension, and voilà
-
-1. Open the extension or application where you need to enter your GitHub details.
-2. Provide your GitHub username in the designated field.
-3. Enter the repository name associated with your solution.
-4. Paste the GitHub access token you extracted earlier into the relevant field.
-5. Click on COMMIT TO GITHUB button.
-
-## Voilà!
-![Voilà Image](https://github.com/SyedMuhammadFaheem/LeetHub/blob/fea5afe88b5376a2faca9791270061d1b5261fd2/icons/Screenshot%202024-02-05%20at%206.17.35%E2%80%AFPM.png)
-
-Your solution would get committed now successfully.
-
+[Wahaj Javed Alam](https://github.com/WahajJaved20)

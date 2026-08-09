@@ -1,57 +1,36 @@
-function saveCredentials(username, repo, token, fileName) {
-  chrome.storage.local.set({
-    username: username,
-    repo: repo,
-    token: token,
-  });
+function setStatus(text, dotState) {
+  document.getElementById("status").textContent = text;
+  var dot = document.getElementById("statusDot");
+  dot.className = "status-dot" + (dotState ? " status-dot--" + dotState : "");
 }
 
-function loadCredentials() {
-  chrome.storage.local.get(["username", "repo", "token"], function (result) {
-    const username = result.username || "";
-    const repo = result.repo || "";
-    const token = result.token || "";
-
-    document.getElementById("username").value = username;
-    document.getElementById("repo").value = repo;
-    document.getElementById("token").value = token;
-  });
-}
+document.getElementById("settingsButton").addEventListener("click", function () {
+  chrome.runtime.openOptionsPage();
+});
 
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    var currentURL = tabs[0].url;
-    var urlPattern = /^https:\/\/leetcode\.com\/submissions\/detail\/\d*\/?$/;
+  var currentURL = tabs[0] && tabs[0].url ? new URL(tabs[0].url) : null;
+  var onLeetCode = currentURL && currentURL.hostname === "leetcode.com";
+  var commitButton = document.getElementById("commitButton");
 
-    console.log(urlPattern.test(currentURL))
+  if (!onLeetCode) {
+    setStatus("Open a LeetCode problem to use LeetHub.", null);
+    return;
+  }
 
+  chrome.storage.local.get(["githubOwner", "githubRepo", "githubToken"], function (r) {
+    if (!r.githubToken || !r.githubOwner || !r.githubRepo) {
+      setStatus("Not connected — open Settings to connect GitHub.", "warn");
+      return;
+    }
+    setStatus("Watching for an accepted submission.", "ok");
+    document.getElementById("repoOwner").textContent = r.githubOwner;
+    document.getElementById("repoName").textContent = r.githubRepo;
+    document.getElementById("repoPath").hidden = false;
+    commitButton.hidden = false;
+  });
 
-  
-  if (urlPattern.test(currentURL)) {
-    document.getElementById(
-      "popupContent"
-    ).innerHTML = `<label for="username">GitHub Username:</label>
-        <input type="text" id="username" />
-        
-        <label for="repo">GitHub Repository:</label>
-        <input type="text" id="repo" />
-        
-        <label for="token">Personal Access Token:</label>
-        <input type="text" id="token" />
-        
-        <button id="commitButton">Commit to GitHub</button>`;
-    loadCredentials();
-    document
-      .getElementById("commitButton")
-      .addEventListener("click", function () {
-        const username = document.getElementById("username").value;
-        const repo = document.getElementById("repo").value;
-        const token = document.getElementById("token").value;
-
-        saveCredentials(username, repo, token);
-        console.log(username, repo, token);
-        chrome.tabs.executeScript(tabs[0].id, { file: "content.js" });
-      });
-  } 
-
-  
+  commitButton.addEventListener("click", function () {
+    chrome.tabs.sendMessage(tabs[0].id, { type: "MANUAL_COMMIT" });
+  });
 });

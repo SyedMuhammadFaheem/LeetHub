@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>LeetHub Settings</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="options">
+    <div class="options__header">
+      <img class="brand__icon" src="icons/leetcode.png" alt="" />
+      <span class="options__title">LeetHub Settings</span>
+    </div>
+
+    <div class="hunk">
+      <div class="hunk__header">b/repository</div>
+      <div class="hunk__body">
+        <div class="field">
+          <label class="field__label" for="owner">GitHub owner</label>
+          <input class="field__input" type="text" id="owner" placeholder="octocat" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="repo">Repository</label>
+          <input class="field__input" type="text" id="repo" placeholder="leetcode-solutions" />
+        </div>
+        <button id="saveRepo" class="btn btn--ghost">Save repository</button>
+      </div>
+    </div>
+
+    <div class="hunk">
+      <div class="hunk__header">b/github-connection</div>
+      <div class="hunk__body">
+        <div class="hunk__row">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="authStatus">Not connected.</span>
+        </div>
+        <button id="connectOAuth" class="btn btn--primary">Connect with GitHub</button>
+
+        <div id="deviceCodeBox" class="device-code" hidden>
+          <div class="device-code__label">Enter this code at github.com/login/device</div>
+          <div class="device-code__value" id="userCode"></div>
+          <a class="device-code__link" id="verificationLink" href="#" target="_blank">Open verification page →</a>
+        </div>
+
+        <div class="divider">or</div>
+
+        <div class="field">
+          <label class="field__label" for="token">Personal access token</label>
+          <input class="field__input" type="text" id="token" placeholder="Fine-grained PAT, Contents: read/write" />
+          <div class="field__hint">Scope it to a single repository with Contents read &amp; write only.</div>
+        </div>
+        <button id="savePat" class="btn btn--ghost">Save token</button>
+
+        <hr class="hr" />
+        <button id="signOut" class="btn btn--danger">Sign out</button>
+      </div>
+    </div>
+  </div>
+  <script src="lib/config.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
