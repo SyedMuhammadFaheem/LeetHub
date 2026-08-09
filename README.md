@@ -5,8 +5,8 @@ A Chrome extension (Manifest V3) that automatically commits your accepted LeetCo
 ## What it does
 
 - Watches the problem page while you work. When a submission comes back **Accepted**, it commits automatically.
-- Pulls the solution code, language, difficulty, and tags from LeetCode's own submission data.
-- Writes each solution to `<problem-slug>/solution.<ext>` plus a `<problem-slug>/README.md` with problem notes, and keeps a progress table in your repo's root `README.md` up to date.
+- Pulls the solution code, language, difficulty, tags, and the full problem statement from LeetCode's own submission/question data.
+- Creates one folder per problem (`<number>-<slug>/`) containing the solution, the question as Markdown, and a blank notes file for your own approach/complexity write-up — and keeps a progress table in your repo's root `README.md` up to date.
 - Skips committing if you resubmit an identical accepted solution.
 
 ## Installation (unpacked, no build step)
@@ -51,14 +51,18 @@ Just solve problems on LeetCode normally. When a submission is Accepted, LeetHub
 
 ```
 your-repo/
-  README.md              # auto-updated progress table
-  two-sum/
-    solution.py
-    README.md             # problem title, difficulty, tags, runtime/memory
-  add-two-numbers/
+  README.md              # auto-updated progress table (# | problem | difficulty | solved)
+  1-two-sum/
+    solution.py           # refreshed on every accepted (re)submission
+    question.md            # full problem statement — created once, never rewritten
+    notes.md                # blank Approach/Complexity scaffold — created once, never rewritten
+  2-add-two-numbers/
     solution.js
-    README.md
+    question.md
+    notes.md
 ```
+
+`question.md` and `notes.md` are only ever *created*, never overwritten — LeetHub checks whether they already exist before touching them, so anything you write in `notes.md` (or hand-edit in `question.md`) survives every future resubmission of that problem. Only `solution.<ext>` updates each time you resubmit an accepted solution.
 
 ## Development
 

@@ -39,15 +39,18 @@
       .join("\n");
     var langEl = document.querySelector("[data-e2e-locator='console-editor-lang-select'], button[id*='lang']");
     var titleEl = document.querySelector("[data-cy='question-title'], a[href*='/problems/'] div");
+    var rawTitle = titleEl ? titleEl.textContent : document.title.replace(/ - LeetCode$/, "");
+    var numberMatch = rawTitle.match(/^(\d+)\.\s*(.*)$/);
     return {
       code: code,
       language: langEl ? langEl.textContent : null,
-      title: titleEl ? titleEl.textContent : document.title.replace(/ - LeetCode$/, ""),
+      title: numberMatch ? numberMatch[2] : rawTitle,
       titleSlug: getSlugFromUrl(),
       difficulty: null,
       tags: [],
       runtime: null,
       memory: null,
+      frontendId: numberMatch ? numberMatch[1] : null,
     };
   }
 
@@ -79,33 +82,51 @@
         return;
       }
 
+      var folder = (details.frontendId ? details.frontendId + "-" : "") + slug;
       var ext = mapLanguageToExtension(details.language);
-      var filePath = slug + "/solution" + ext;
-      var readmePath = slug + "/README.md";
+      var solutionPath = folder + "/solution" + ext;
+      var questionPath = folder + "/question.md";
+      var notesPath = folder + "/notes.md";
       var commitMessage = (details.title || slug) + " - " + new Date().toISOString();
+
+      var solutionContent = details.code || "";
+      if (details.runtime || details.memory) {
+        var statsLine = [details.runtime, details.memory].filter(Boolean).join(" | ");
+        solutionContent = "// " + statsLine + "\n" + solutionContent;
+      }
 
       commitFile({
         owner: owner,
         repo: repo,
-        path: filePath,
-        content: btoa(unescape(encodeURIComponent(details.code || ""))),
+        path: solutionPath,
+        content: btoa(unescape(encodeURIComponent(solutionContent))),
         message: commitMessage,
         token: token,
       })
         .then(function () {
-          return commitFile({
-            owner: owner,
-            repo: repo,
-            path: readmePath,
-            content: btoa(unescape(encodeURIComponent(buildProblemReadme(details)))),
-            message: "Update notes for " + (details.title || slug),
-            token: token,
-          });
+          return Promise.all([
+            ensureQuestionFile(owner, repo, token, folder, questionPath, details),
+            commitFileIfAbsent({
+              owner: owner,
+              repo: repo,
+              path: notesPath,
+              content: btoa(unescape(encodeURIComponent(NOTES_TEMPLATE))),
+              message: "Add notes scaffold for " + (details.title || slug),
+              token: token,
+            }),
+          ]);
         })
         .then(function () {
-          lastCommit[slug] = { content: details.code, language: details.language };
+          lastCommit[slug] = {
+            content: details.code,
+            language: details.language,
+            frontendId: details.frontendId || null,
+            folder: folder,
+            title: details.title || slug,
+            difficulty: details.difficulty || "Unknown",
+          };
           chrome.storage.local.set({ lastCommit: lastCommit });
-          updateRootReadme(owner, repo, token, slug, details, lastCommit);
+          updateRootReadme(owner, repo, token, lastCommit);
           showToast("LeetHub: committed " + (details.title || slug) + "!");
           chrome.runtime.sendMessage({ type: "COMMIT_SUCCESS" });
         })
@@ -116,13 +137,34 @@
     });
   }
 
-  function updateRootReadme(owner, repo, token, slug, details, lastCommit) {
+  // question.md is created once and never rewritten, so only fetch the
+  // (larger) full statement when it isn't already there.
+  function ensureQuestionFile(owner, repo, token, folder, questionPath, details) {
+    var url = buildApiUrl(owner, repo, questionPath);
+    return fetch(url, { headers: { Authorization: "Bearer " + token } }).then(function (res) {
+      if (res.status !== 404) return { created: false };
+      return fetchQuestionContent(details.titleSlug).then(function (content) {
+        var problem = Object.assign({}, details, content || {});
+        return commitFileIfAbsent({
+          owner: owner,
+          repo: repo,
+          path: questionPath,
+          content: btoa(unescape(encodeURIComponent(buildQuestionMd(problem)))),
+          message: "Add question statement for " + (details.title || folder),
+          token: token,
+        });
+      });
+    });
+  }
+
+  function updateRootReadme(owner, repo, token, lastCommit) {
     var rows = Object.keys(lastCommit).map(function (s) {
       var entry = lastCommit[s];
       return {
-        title: s === slug ? details.title || s : s,
-        titleSlug: s,
-        difficulty: s === slug ? details.difficulty || "Unknown" : "Unknown",
+        title: entry.title || s,
+        folder: entry.folder || s,
+        frontendId: entry.frontendId || "",
+        difficulty: entry.difficulty || "Unknown",
         date: new Date().toISOString().slice(0, 10),
       };
     });

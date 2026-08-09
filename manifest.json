@@ -33,6 +33,7 @@
         "lib/extract.js",
         "lib/github.js",
         "lib/graphql.js",
+        "lib/htmlToMd.js",
         "lib/readme.js",
         "content.js"
       ],
