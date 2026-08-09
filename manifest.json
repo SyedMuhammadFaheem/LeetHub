@@ -5,7 +5,9 @@
   "description": "Automatically commit accepted LeetCode solutions to GitHub",
   "action": {
     "default_icon": {
-      "128": "icons/leetcode.png"
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
     },
     "default_popup": "popup.html"
   },
@@ -14,7 +16,9 @@
   },
   "options_page": "options.html",
   "icons": {
-    "128": "icons/leetcode.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "permissions": [
     "storage",
