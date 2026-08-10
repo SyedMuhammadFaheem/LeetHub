@@ -1,89 +1,106 @@
 # LeetHub
-A chrome extension which automatically commits your leetcode solution to a predefined repository you connected earlier.
 
-# V 0.0.2.6
+**v2** — a Chrome extension (Manifest V3) that automatically commits your accepted LeetCode solutions to a GitHub repository — no manual copy-paste, no clicking through a popup.
 
-### Special Mentions: [Wahaj Javed Alam](https://github.com/WahajJaved20)
+> Not on the Chrome Web Store. Install it manually in a couple of minutes — see [Installing the extension](#installing-the-extension) below.
 
+## What's new in v2
 
-# Installation Steps
-1. **Download the Zip File from the Github Page**
-   - Visit the [Github Page](https://github.com/SyedMuhammadFaheem/LeetHub).
-   - Download the Zip File by clicking on the "Code" button and selecting "Download ZIP."
+This is a full rewrite of the original LeetHub, not an incremental update:
 
-2. **Extract it into any directory in your PC**
-   - After downloading, extract the contents of the ZIP file into any directory of your choice on your computer.
+- Rebuilt on **Manifest V3** (the old Manifest V2 build no longer runs in current Chrome).
+- **Auto-commits on Accepted** — no popup click needed.
+- Reads submissions via **LeetCode's GraphQL API** instead of scraping the page, with a DOM fallback.
+- **Per-problem folders** (`<number>-<title>/`) with the solution, the full question as Markdown, and a personal `notes.md` that's created once and never overwritten.
+- **GitHub OAuth (Device Flow)** sign-in, alongside the original Personal Access Token option.
+- A settings page, connection status, auto-updated progress table in your repo's README, a new icon, and a redesigned UI.
+- If you used the old (v1) version: storage was reset by this rewrite, so open **Settings** and reconnect once after updating.
 
-3. **Open your browser (Chrome or Opera GX or Brave)**
-   - Ensure you have either Google Chrome or Opera GX installed. This extension is designed to work on browsers supporting the Chrome Web Store.
+## What it does
 
-4. **Go to Extensions**
-   - Open your browser and navigate to the Extensions page.
-     - In Chrome: Click on the three dots in the top-right corner, go to "More tools," and then select "Extensions."
-     - In Opera GX or Brave: Click on the browser menu, go to "Extensions," and then select "Manage Extensions."
+- Watches the problem page while you work. When a submission comes back **Accepted**, it commits automatically.
+- Pulls the solution code, language, difficulty, tags, and the full problem statement from LeetCode's own submission/question data.
+- Creates one folder per problem (`<number>-<slug>/`) containing the solution, the question as Markdown, and a blank notes file for your own approach/complexity write-up — and keeps a progress table in your repo's root `README.md` up to date.
+- Skips committing if you resubmit an identical accepted solution.
 
-5. **Enable Developer Mode in the Top bar**
-   - Once on the Extensions page, look for a checkbox or toggle named "Developer mode" in the top-right corner.
-   - Enable Developer Mode.
+## Installing the extension
 
-6. **Load the Extension**
-   - Look for an option to "Load unpacked" or "Load extension" on the Extensions page.
-   - Click on it and select the directory where you extracted the contents of the ZIP file.
+This project isn't published on the Chrome Web Store, so it's installed the same way any developer-mode extension is — takes about a minute:
 
-7. **Verify Installation**
-   - The extension should now be visible in your list of installed extensions.
-   - Ensure it is enabled and working as expected.
+1. **Download the code.** Either clone it —
+   ```
+   git clone https://github.com/SyedMuhammadFaheem/LeetHub.git
+   ```
+   — or click the green **Code → Download ZIP** button on the GitHub repo page and unzip it somewhere.
+2. Open **`chrome://extensions`** in your address bar (also works in any Chromium browser — Brave, Edge, Opera GX).
+3. Turn on **Developer mode** using the toggle in the top-right corner.
+4. Click **Load unpacked**.
+5. Select the folder you cloned/unzipped (the one containing `manifest.json`).
+6. The LeetHub icon appears in your browser toolbar — pin it for easy access (puzzle-piece icon → pin).
 
+**Updating later**: pull the latest changes (or re-download the ZIP) into the same folder, then go back to `chrome://extensions` and click the reload icon (⟳) on the LeetHub card.
 
-# Generate Github Personal Access Token
-## Log in to your GitHub Account:
+## Connecting GitHub
 
-1. Open your web browser and go to [GitHub](https://github.com/).
-2. Log in to your GitHub account if you are not already logged in.
+Click the LeetHub icon → **Open Settings**. You have two ways to connect:
 
-## Access Personal Access Tokens Settings:
+### Option A — Sign in with GitHub (recommended)
 
-1. In the top-right corner of the GitHub page, click on your profile picture, and then click on "Settings."
+This uses GitHub's OAuth Device Flow: no password or token to copy, and the extension never sees your GitHub password. It works out of the box — just open the extension's Settings page, click **Connect with GitHub**, and enter the code shown at the GitHub page that opens.
 
-## Go to Developer Settings:
+<details>
+<summary>Forking this project and want your own OAuth App instead of the shared one?</summary>
 
-1. In the left sidebar, scroll down and click on "Developer settings."
+`lib/config.js` ships with a `GITHUB_CLIENT_ID` already registered for this project. If you fork the repo and want authorizations to show up under your own app identity instead:
 
-## Generate a Token:
+1. Go to [github.com/settings/developers](https://github.com/settings/developers) → **New OAuth App**.
+2. Fill in any Homepage URL and Authorization callback URL (device flow doesn't use the callback, but GitHub requires the field).
+3. Open the new app's settings and check **"Enable Device Flow."**
+4. Copy the **Client ID** (not the secret — device flow never needs one) and paste it into `lib/config.js`.
 
-1. In the Developer settings menu, click on "Personal access tokens. (Fine Grained Tokens)"
-2. Click the "Generate token" button.
+</details>
 
-## Configure Token Settings:
+### Option B — Personal Access Token
 
-1. Provide a name for your token in the "Token name" field.
-2. Select the repo you want to push in. Choose only the permissions necessary (admin, commit statuses, contents).
+1. On GitHub, go to **Settings → Developer settings → Personal access tokens (Fine-grained)**.
+2. Generate a token scoped to the one repository you want LeetHub to commit to, with **Contents: Read and write** permission only.
+3. Paste it into the Settings page's token field and save.
 
-## Generate Token:
+Either way, also set your **GitHub Owner** (your username or an org) and **Repository Name** in Settings — this is where solutions get committed.
 
-1. Scroll down and click the "Generate token" button at the bottom of the page.
+## Using it
 
-## Copy and Save the Token:
+Just solve problems on LeetCode normally. When a submission is Accepted, LeetHub commits it in the background and shows a small toast confirming the commit. Open the popup any time to see connection status or trigger a manual commit if auto-detection ever misses a result.
 
-Once the token is generated, GitHub will display it. Copy the token and save it in a secure location immediately.
+## Repository layout it creates
 
+```
+your-repo/
+  README.md              # auto-updated progress table (# | problem | difficulty | solved)
+  1-two-sum/
+    solution.py           # refreshed on every accepted (re)submission
+    question.md            # full problem statement — created once, never rewritten
+    notes.md                # blank Approach/Complexity scaffold — created once, never rewritten
+  2-add-two-numbers/
+    solution.js
+    question.md
+    notes.md
+```
 
-# How and where to use the extension?
-## After you submitted the solution, go to your specific accepted submission
+`question.md` and `notes.md` are only ever *created*, never overwritten — LeetHub checks whether they already exist before touching them, so anything you write in `notes.md` (or hand-edit in `question.md`) survives every future resubmission of that problem. Only `solution.<ext>` updates each time you resubmit an accepted solution.
 
-1. The URL would look like this below:
-   - `https://leetcode.com/submissions/detail/1163743480/`
+## Development
 
-## Enter your GitHub Username, Repository Name, and GitHub Access Token extracted earlier in the extension, and voilà
+No build step — plain JS/HTML/CSS, loaded directly by the browser.
 
-1. Open the extension or application where you need to enter your GitHub details.
-2. Provide your GitHub username in the designated field.
-3. Enter the repository name associated with your solution.
-4. Paste the GitHub access token you extracted earlier into the relevant field.
-5. Click on COMMIT TO GITHUB button.
+- Run tests: `node --test`
+- Syntax-check: `find . -name "*.js" -not -path "./node_modules/*" -print0 | xargs -0 -n1 node --check`
+- CI runs both on every push via `.github/workflows/ci.yml`.
 
-## Voilà!
-![Voilà Image](https://github.com/SyedMuhammadFaheem/LeetHub/blob/fea5afe88b5376a2faca9791270061d1b5261fd2/icons/Screenshot%202024-02-05%20at%206.17.35%E2%80%AFPM.png)
+## Version
 
-Your solution would get committed now successfully.
+2.0.0 — v2, full Manifest V3 rewrite.
 
+### Special Mentions
+
+[Wahaj Javed Alam](https://github.com/WahajJaved20)

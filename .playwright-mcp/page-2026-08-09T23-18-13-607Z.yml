@@ -1,0 +1,27 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e3]: LeetHub Settings
+  - generic [ref=f2e5]:
+    - generic [ref=f2e6]: +++ b/repository
+    - generic [ref=f2e7]:
+      - generic [ref=f2e8]:
+        - generic [ref=f2e9]: GitHub owner
+        - textbox "GitHub owner" [ref=f2e10]:
+          - /placeholder: octocat
+      - generic [ref=f2e11]:
+        - generic [ref=f2e12]: Repository
+        - textbox "Repository" [ref=f2e13]:
+          - /placeholder: leetcode-solutions
+      - button "Save repository" [ref=f2e14] [cursor=pointer]
+  - generic [ref=f2e15]:
+    - generic [ref=f2e16]: +++ b/github-connection
+    - generic [ref=f2e17]:
+      - generic [ref=f2e18]: Not connected.
+      - button "Connect with GitHub" [ref=f2e21] [cursor=pointer]
+      - generic [ref=f2e22]: or
+      - generic [ref=f2e23]:
+        - generic [ref=f2e24]: Personal access token
+        - textbox "Personal access token" [ref=f2e25]:
+          - /placeholder: "Fine-grained PAT, Contents: read/write"
+        - generic [ref=f2e26]: Scope it to a single repository with Contents read & write only.
+      - button "Save token" [ref=f2e27] [cursor=pointer]
+      - button "Sign out" [ref=f2e29] [cursor=pointer]

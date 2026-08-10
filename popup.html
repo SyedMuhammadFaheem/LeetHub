@@ -2,18 +2,35 @@
 <html>
 
 <head>
+  <meta charset="utf-8" />
   <title>LeetHub</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <div id="popupContent" class="form-container">
-            <p>Cannot use extenstion on this site!</p>
-        </div>
+  <div class="popup">
+    <div class="brand">
+      <img class="brand__icon" src="icons/icon48.png" alt="" />
+      <span class="brand__name">LeetHub</span>
     </div>
-    
-    <script src="popup.js"></script>
+
+    <div class="status-card">
+      <div class="status-card__row">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-card__text" id="status">Checking…</span>
+      </div>
+      <div class="repo-path" id="repoPath" hidden>
+        <span class="repo-path__owner" id="repoOwner"></span><span class="repo-path__sep">/</span><span class="repo-path__repo" id="repoName"></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="commitButton" class="btn btn--primary" hidden>Commit now</button>
+      <button id="settingsButton" class="btn btn--ghost">Settings</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
 </body>
 
 </html>

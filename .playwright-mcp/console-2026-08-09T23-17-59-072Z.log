@@ -1,0 +1,2 @@
+[     114ms] TypeError: Cannot read properties of undefined (reading 'query')
+    at http://localhost:8917/popup.js:11:13
