@@ -1,6 +1,6 @@
 # LeetHub
 
-**v2** — a Chrome extension (Manifest V3) that automatically commits your accepted LeetCode solutions to a GitHub repository — no manual copy-paste, no clicking through a popup.
+**LeetHub** is a free Chrome extension (Manifest V3) that automatically syncs and commits your accepted LeetCode solutions to a GitHub repository — no manual copy-paste, no clicking through a popup. Think of it as **LeetCode to GitHub auto-sync**, built for people tracking their coding interview prep in git.
 
 > Not on the Chrome Web Store. Install it manually in a couple of minutes — see [Installing the extension](#installing-the-extension) below.
 
